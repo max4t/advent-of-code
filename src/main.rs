@@ -4,6 +4,12 @@ mod ex_01_1;
 mod ex_01_2;
 mod ex_02_1;
 mod ex_02_2;
+mod ex_2015_01;
+mod ex_2015_01_2;
+mod ex_2015_02;
+mod ex_2015_02_2;
+mod ex_2015_03;
+mod ex_2015_03_2;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -58,6 +64,44 @@ fn main() {
                 }).collect::<Vec<_>>();
             let a = a.iter().map(|s| s.as_slice()).collect::<Vec<_>>();
             let res = ex_02_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-01" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_01::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-01-2" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_01_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-02" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let a = lines.iter().map(|r| r.split('x').map(|f| f.parse::<i64>().unwrap()).collect::<Vec<_>>()).map(|f| (f[0], f[1], f[2])).collect::<Vec<_>>();
+            let res = ex_2015_02::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-02-2" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let a = lines.iter().map(|r| r.split('x').map(|f| f.parse::<i64>().unwrap()).collect::<Vec<_>>()).map(|f| (f[0], f[1], f[2])).collect::<Vec<_>>();
+            let res = ex_2015_02_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-03" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_03::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-03-2" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_03_2::basic_solve(&a);
             println!("Result: {}", res);
         },
         _ => panic!("unknown example"),
