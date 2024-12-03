@@ -14,6 +14,8 @@ mod ex_2015_04;
 mod ex_2015_04_2;
 mod ex_2015_05;
 mod ex_2015_05_2;
+mod ex_2015_06;
+mod ex_2015_06_2;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -130,6 +132,28 @@ fn main() {
             let a = io::stdin().lines()
                 .map(|s| s.unwrap()).collect::<Vec<_>>();
             let res = ex_2015_05_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-06" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let reg = regex::Regex::new(r"(?<typ>[a-z ]+) (?<x1>\d+),(?<y1>\d+) through (?<x2>\d+),(?<y2>\d+)").unwrap();
+            let a = lines.iter().map(|s| {
+                let capt = reg.captures(s).unwrap();
+                (capt["typ"].to_owned(), (capt["x1"].parse::<u32>().unwrap(), capt["y1"].parse::<u32>().unwrap()), (capt["x2"].parse::<u32>().unwrap(), capt["y2"].parse::<u32>().unwrap()))
+            }).collect::<Vec<_>>();
+            let res = ex_2015_06::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-06-2" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let reg = regex::Regex::new(r"(?<typ>[a-z ]+) (?<x1>\d+),(?<y1>\d+) through (?<x2>\d+),(?<y2>\d+)").unwrap();
+            let a = lines.iter().map(|s| {
+                let capt = reg.captures(s).unwrap();
+                (capt["typ"].to_owned(), (capt["x1"].parse::<u32>().unwrap(), capt["y1"].parse::<u32>().unwrap()), (capt["x2"].parse::<u32>().unwrap(), capt["y2"].parse::<u32>().unwrap()))
+            }).collect::<Vec<_>>();
+            let res = ex_2015_06_2::basic_solve(&a);
             println!("Result: {}", res);
         },
         _ => panic!("unknown example"),
