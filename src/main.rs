@@ -10,6 +10,8 @@ mod ex_2015_02;
 mod ex_2015_02_2;
 mod ex_2015_03;
 mod ex_2015_03_2;
+mod ex_2015_04;
+mod ex_2015_04_2;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -102,6 +104,18 @@ fn main() {
             let a = io::stdin().lines()
                 .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
             let res = ex_2015_03_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-04" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_04::basic_solve(&a.trim());
+            println!("Result: {}", res);
+        },
+        "2015-04-2" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_2015_04_2::basic_solve(&a.trim());
             println!("Result: {}", res);
         },
         _ => panic!("unknown example"),
