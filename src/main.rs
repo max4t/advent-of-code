@@ -4,6 +4,8 @@ mod ex_01_1;
 mod ex_01_2;
 mod ex_02_1;
 mod ex_02_2;
+mod ex_03_1;
+mod ex_03_2;
 mod ex_2015_01;
 mod ex_2015_01_2;
 mod ex_2015_02;
@@ -70,6 +72,18 @@ fn main() {
                 }).collect::<Vec<_>>();
             let a = a.iter().map(|s| s.as_slice()).collect::<Vec<_>>();
             let res = ex_02_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "03-1" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_03_1::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "03-2" => {
+            let a = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
+            let res = ex_03_2::basic_solve(&a);
             println!("Result: {}", res);
         },
         "2015-01" => {
