@@ -18,6 +18,8 @@ mod ex_2015_05;
 mod ex_2015_05_2;
 mod ex_2015_06;
 mod ex_2015_06_2;
+mod ex_2015_07;
+mod ex_2015_07_2;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -168,6 +170,22 @@ fn main() {
                 (capt["typ"].to_owned(), (capt["x1"].parse::<u32>().unwrap(), capt["y1"].parse::<u32>().unwrap()), (capt["x2"].parse::<u32>().unwrap(), capt["y2"].parse::<u32>().unwrap()))
             }).collect::<Vec<_>>();
             let res = ex_2015_06_2::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-07" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let a = lines.iter().map(|l| l.split_whitespace().map(|s| s.trim()).collect::<Vec<_>>()).collect::<Vec<_>>();
+            let a = a.iter().map(|l| l.as_slice()).collect::<Vec<_>>();
+            let res = ex_2015_07::basic_solve(&a);
+            println!("Result: {}", res);
+        },
+        "2015-07-2" => {
+            let lines = io::stdin().lines()
+                .map(|s| s.unwrap()).collect::<Vec<_>>();
+            let a = lines.iter().map(|l| l.split_whitespace().map(|s| s.trim()).collect::<Vec<_>>()).collect::<Vec<_>>();
+            let a = a.iter().map(|l| l.as_slice()).collect::<Vec<_>>();
+            let res = ex_2015_07_2::basic_solve(&a);
             println!("Result: {}", res);
         },
         _ => panic!("unknown example"),
