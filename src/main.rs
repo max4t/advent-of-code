@@ -24,6 +24,7 @@ mod ex_2015_06;
 mod ex_2015_06_2;
 mod ex_2015_07;
 mod ex_2015_07_2;
+mod solver;
 
 fn main() {
     let args: Vec<_> = env::args().collect();
@@ -40,7 +41,8 @@ fn main() {
                     (res[0].parse::<u32>().unwrap(), res[1].parse::<u32>().unwrap())
                 })
                 .unzip();
-            let res = ex_01_1::basic_solve(&mut a, &mut b);
+            let mut a: &mut [u32] = &mut *a;
+            let res = ex_01_1::basic_solve(a, &mut b);
             println!("Result: {}", res);
         },
         "01-2" => {
