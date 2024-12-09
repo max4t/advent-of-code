@@ -2,12 +2,6 @@ use std::{env, io};
 
 use solver::Solver;
 
-mod ex_03_1;
-mod ex_03_2;
-mod ex_04_1;
-mod ex_04_2;
-mod ex_05_1;
-mod ex_05_2;
 mod ex_2015_01;
 mod ex_2015_01_2;
 mod ex_2015_02;
@@ -51,47 +45,33 @@ fn main() {
             println!("Result: {}", res);
         },
         "03-1" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-            let res = ex_03_1::basic_solve(&a);
+            let ex: y2024::d03::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_one();
             println!("Result: {}", res);
         },
         "03-2" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-            let res = ex_03_2::basic_solve(&a);
+            let ex: y2024::d03::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_two();
             println!("Result: {}", res);
         },
         "04-1" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap().chars().collect::<Vec<_>>()).collect::<Vec<_>>();
-            let a = a.iter().map(|m| m.as_slice()).collect::<Vec<_>>();
-            let res = ex_04_1::basic_solve(&a);
+            let ex: y2024::d04::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_one();
             println!("Result: {}", res);
         },
         "04-2" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap().chars().collect::<Vec<_>>()).collect::<Vec<_>>();
-            let a = a.iter().map(|m| m.as_slice()).collect::<Vec<_>>();
-            let res = ex_04_2::basic_solve(&a);
+            let ex: y2024::d04::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_two();
             println!("Result: {}", res);
         },
         "05-1" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>();
-            let mut a = a.iter();
-            let deps = a.by_ref().map_while(|m| if m.is_empty() { None } else { let op = m.split('|').collect::<Vec<_>>(); Some((op[0].parse::<u64>().unwrap(), op[1].parse::<u64>().unwrap())) }).collect::<Vec<_>>();
-            let mut updates = a.map(|l| l.split(',').map(|o| o.parse::<u64>().unwrap()).collect::<Vec<_>>()).collect::<Vec<_>>();
-            let res = ex_05_1::basic_solve(&deps, &mut updates);
+            let ex: y2024::d05::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_one();
             println!("Result: {}", res);
         },
         "05-2" => {
-            let a = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>();
-            let mut a = a.iter();
-            let deps = a.by_ref().map_while(|m| if m.is_empty() { None } else { let op = m.split('|').collect::<Vec<_>>(); Some((op[0].parse::<u64>().unwrap(), op[1].parse::<u64>().unwrap())) }).collect::<Vec<_>>();
-            let mut updates = a.map(|l| l.split(',').map(|o| o.parse::<u64>().unwrap()).collect::<Vec<_>>()).collect::<Vec<_>>();
-            let res = ex_05_2::basic_solve(&deps, &mut updates);
+            let ex: y2024::d05::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_two();
             println!("Result: {}", res);
         },
         "2015-01" => {
