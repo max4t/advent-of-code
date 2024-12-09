@@ -43,27 +43,13 @@ fn main() {
             println!("Result: {}", res);
         },
         "02-1" => {
-            let lines = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>();
-            let a = lines.iter()
-                .map(|s| s.trim())
-                .map(|s| {
-                    s.split_whitespace().map(|s| s.parse::<u32>().unwrap()).collect::<Vec<_>>()
-                }).collect::<Vec<_>>();
-            let a = a.iter().map(|s| s.as_slice()).collect::<Vec<_>>();
-            let res = ex_02_1::basic_solve(&a);
+            let ex: y2024::d02::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_one();
             println!("Result: {}", res);
         },
         "02-2" => {
-            let lines = io::stdin().lines()
-                .map(|s| s.unwrap()).collect::<Vec<_>>();
-            let a = lines.iter()
-                .map(|s| s.trim())
-                .map(|s| {
-                    s.split_whitespace().map(|s| s.parse::<u32>().unwrap()).collect::<Vec<_>>()
-                }).collect::<Vec<_>>();
-            let a = a.iter().map(|s| s.as_slice()).collect::<Vec<_>>();
-            let res = ex_02_2::basic_solve(&a);
+            let ex: y2024::d02::Problem = io::stdin().try_into().unwrap();
+            let res = ex.part_two();
             println!("Result: {}", res);
         },
         "03-1" => {

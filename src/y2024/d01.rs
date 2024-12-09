@@ -11,7 +11,7 @@ impl TryFrom<Stdin> for Problem
     fn try_from(value: Stdin) -> Result<Self, Self::Error> {
         let (a, b): (Vec<_>, Vec<_>) = value.lines()
             .map(|res| {
-                res.map_err(|err| anyhow!(err)) .and_then(|m| {
+                res.map_err(|err| anyhow!(err)).and_then(|m| {
                     let s = m.trim();
                     let res= s.split_whitespace().collect::<Vec<_>>();
                     // if res.len() != 
