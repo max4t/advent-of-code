@@ -2,8 +2,6 @@ use std::{env, io};
 
 use solver::Solver;
 
-mod ex_02_1;
-mod ex_02_2;
 mod ex_03_1;
 mod ex_03_2;
 mod ex_04_1;
