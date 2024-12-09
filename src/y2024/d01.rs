@@ -2,9 +2,9 @@ use std::{collections::HashMap, io::Stdin, iter::zip};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
-struct Ex01(Vec<u64>, Vec<u64>);
+pub struct Problem(Vec<u64>, Vec<u64>);
 
-impl TryFrom<Stdin> for Ex01
+impl TryFrom<Stdin> for Problem
 {
     type Error = anyhow::Error;
 
@@ -27,7 +27,7 @@ impl TryFrom<Stdin> for Ex01
     }
 }
 
-impl solver::Solver for Ex01 {
+impl solver::Solver for Problem {
     fn part_one(self: &Self) -> impl std::fmt::Display {
         let mut a = self.0.clone();
         let mut b = self.1.clone();
@@ -47,11 +47,19 @@ impl solver::Solver for Ex01 {
     }
 }
 
-pub fn basic_solve(a: &mut [u32], b: &mut [u32]) -> u32 {
-    assert!(a.len() == b.len(), "lists have different lengths (a = {}, b = {})", a.len(), b.len());
-    a.sort();
-    b.sort();
-    zip(a, b)
-        .map(|(o, t)| o.abs_diff(*t))
-        .sum()
+#[cfg(test)]
+mod tests {
+    use solver::Solver;
+
+    use super::*;
+
+    #[test]
+    fn part_one() {
+        assert_eq!("11", format!("{}", Problem(vec![3, 4, 2, 1, 3, 3], vec![4, 3, 5, 3, 9, 3]).part_one()));
+    }
+
+    #[test]
+    fn part_two() {
+        assert_eq!("31", format!("{}", Problem(vec![3, 4, 2, 1, 3, 3], vec![4, 3, 5, 3, 9, 3]).part_two()));
+    }
 }
