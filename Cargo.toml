@@ -7,5 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.94"
+clap = { version = "4.5.23", features = ["derive"] }
 md5 = "0.7.0"
+paste = "1.0.15"
 regex = "1.11.1"
