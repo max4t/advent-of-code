@@ -76,6 +76,7 @@ fn main() -> anyhow::Result<()> {
         24/08
         24/09
         24/10
+        24/11
     );
     // let args: Vec<_> = env::args().collect();
     // assert!(args.len() == 2, "requires one argument but had {}", args.len());
