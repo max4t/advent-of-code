@@ -1,17 +1,34 @@
-use std::{collections::{HashMap, HashSet}, io::Stdin, iter};
+use std::{collections::{HashMap, HashSet}, io::{BufRead, Lines, Stdin}, iter};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
 pub struct Problem(HashSet<(usize, usize)>, (usize, usize), (usize, usize), usize);
 
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
+    type Error = anyhow::Error;
 
-fn parse(lines: Vec<String>) -> Result<(HashSet<(usize, usize)>, (usize, usize), (usize, usize))> {
-    let a = lines.into_iter()
-        .enumerate().flat_map(|(y, row)| row.chars().enumerate().map(|(x, c)| (x, y, c)).collect::<Vec<_>>())
-        .collect::<Vec<_>>();
-    let start_point = a.iter().find_map(|&(x, y, c)| if c == 'S' { Some((x, y)) } else { None }).ok_or_else(|| anyhow!("unable to find starting point"))?;
-    let end_point = a.iter().find_map(|&(x, y, c)| if c == 'E' { Some((x, y)) } else { None }).ok_or_else(|| anyhow!("unable to find end point"))?;
-    Ok((HashSet::from_iter(a.into_iter().filter_map(|(x, y, c)| if c != '#' { Some((x, y)) } else { None })), start_point, end_point))
+    fn try_from(value: Lines<B>) -> std::result::Result<Self, Self::Error> {
+        (100, value).try_into()
+    }
+}
+
+impl<B: BufRead> TryFrom<(usize, Lines<B>)> for Problem {
+    type Error = anyhow::Error;
+
+    fn try_from((min_improv, value): (usize, Lines<B>)) -> std::result::Result<Self, Self::Error> {
+        let a = value
+            .enumerate()
+            .flat_map(|(y, row)| row.map_or_else(
+                |e| vec![Err(e)],
+                |row| row.chars().enumerate().map(|(x, c)| Ok((x, y, c))).collect::<Vec<_>>(),
+            ))
+            .collect::<Result<Vec<_>, _>>()?;
+        let start_point = a.iter().find_map(|&(x, y, c)| if c == 'S' { Some((x, y)) } else { None }).ok_or_else(|| anyhow!("unable to find starting point"))?;
+        let end_point = a.iter().find_map(|&(x, y, c)| if c == 'E' { Some((x, y)) } else { None }).ok_or_else(|| anyhow!("unable to find end point"))?;
+        let a = HashSet::from_iter(a.into_iter().filter_map(|(x, y, c)| if c != '#' { Some((x, y)) } else { None }));
+
+        Ok(Self(a, start_point, end_point, min_improv))
+    }
 }
 
 impl TryFrom<Stdin> for Problem
@@ -19,8 +36,7 @@ impl TryFrom<Stdin> for Problem
     type Error = anyhow::Error;
 
     fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let (a, start_point, end_point) = parse(value.lines().collect::<Result<Vec<_>, _>>()?)?;
-        Ok(Self(a, start_point, end_point, 100))
+        value.lines().try_into()
     }
 }
 
@@ -127,8 +143,8 @@ mod tests {
 #.#.#.#.#.#.###
 #...#...#...###
 ###############";
-        let (a, start, end) = parse(race_track.split("\n").map(|l| l.to_owned()).collect::<Vec<_>>()).unwrap();
-        assert_eq!("8", format!("{}", Problem(a, start, end, 12).part_one()));
+        let pb: Problem = (12, race_track.as_bytes().lines()).try_into().unwrap();
+        assert_eq!("8", format!("{}", pb.part_one()));
     }
 
     #[test]
@@ -149,7 +165,8 @@ mod tests {
 #.#.#.#.#.#.###
 #...#...#...###
 ###############";
-        let (a, start, end) = parse(race_track.split("\n").map(|l| l.to_owned()).collect::<Vec<_>>()).unwrap();
-        assert_eq!("41", format!("{}", Problem(a, start, end, 70).part_two()));
+
+        let pb: Problem = (70, race_track.as_bytes().lines()).try_into().unwrap();
+        assert_eq!("41", format!("{}", pb.part_two()));
     }
 }
