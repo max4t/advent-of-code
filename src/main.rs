@@ -1,4 +1,4 @@
-use std::{env, io};
+use std::io;
 
 use clap::{Parser, ValueEnum};
 use solver::Solver;
@@ -44,21 +44,35 @@ impl Default for Part {
     fn default() -> Self { Part::One }
 }
 
+macro_rules! case_list {
+    ($args:ident $t:literal $s1:literal-$s2:literal) => (
+        seq_macro::seq!(N in $s1..=$s2 {
+            match $args.day.as_str() {
+                #(
+                    stringify!(N) => {
+                        paste::paste! {
+                            let ex: [<y20 $t>]::d~N::Problem = io::stdin().try_into()?;
+                        }
+                        match $args.part {
+                            Part::One => println!("Result: {}", ex.part_one()),
+                            Part::Two => println!("Result: {}", ex.part_two()),
+                        };
+                    },
+                )*
+                _ => panic!("unknown day"),
+            }
+        })
+    );
+}
 macro_rules! cases {
-    ($args:ident $($t:literal/$s:literal)*) => (
-        match [$args.year, "_".to_string(), $args.day].concat().as_str() {
+    ($args:ident $($t:literal -> $s1:literal-$s2:literal)*) => (
+        match $args.year.as_str() {
             $(
-                paste::paste! { stringify!([<$t "_" $s>]) } => ({
-                    paste::paste! {
-                        let ex: [<y20 $t>]::[<d $s>]::Problem = io::stdin().try_into()?;
-                    }
-                    match $args.part {
-                        Part::One => println!("Result: {}", ex.part_one()),
-                        Part::Two => println!("Result: {}", ex.part_two()),
-                    };
-                }),
+                stringify!($t) => {
+                    case_list!($args $t $s1-$s2);
+                },
             )*
-            _ => panic!("unknown example"),
+            _ => panic!("unknown year"),
         }
     );
 }
@@ -66,31 +80,7 @@ macro_rules! cases {
 fn main() -> anyhow::Result<()> {
     let args = dbg!(Cli::parse());
     cases!(args
-        24/01
-        24/02
-        24/03
-        24/04
-        24/05
-        24/06
-        24/07
-        24/08
-        24/09
-        24/10
-        24/11
-        24/12
-        24/13
-        24/14
-        24/15
-        24/16
-        24/17
-        24/18
-        24/19
-        24/20
-        24/21
-        24/22
-        24/23
-        24/24
-        24/25
+        24 -> 01-25
     );
     // let args: Vec<_> = env::args().collect();
     // assert!(args.len() == 2, "requires one argument but had {}", args.len());
