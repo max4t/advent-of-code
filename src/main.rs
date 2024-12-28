@@ -3,8 +3,6 @@ use std::{fs, io::{self, BufRead}};
 use clap::{Parser, ValueEnum};
 use solver::Solver;
 
-mod ex_2015_03;
-mod ex_2015_03_2;
 mod ex_2015_04;
 mod ex_2015_04_2;
 mod ex_2015_05;
@@ -14,6 +12,7 @@ mod ex_2015_06_2;
 mod ex_2015_07;
 mod ex_2015_07_2;
 mod solver;
+mod map;
 mod y2015;
 mod y2024;
 
@@ -91,21 +90,10 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
-        15 -> 01-02
+        15 -> 01-03
         24 -> 01-25
     );
-    //     "2015-03" => {
-    //         let a = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-    //         let res = ex_2015_03::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
-    //     "2015-03-2" => {
-    //         let a = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-    //         let res = ex_2015_03_2::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
+
     //     "2015-04" => {
     //         let a = io::stdin().lines()
     //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
