@@ -3,8 +3,6 @@ use std::{fs, io::{self, BufRead}};
 use clap::{Parser, ValueEnum};
 use solver::Solver;
 
-mod ex_2015_01;
-mod ex_2015_01_2;
 mod ex_2015_02;
 mod ex_2015_02_2;
 mod ex_2015_03;
@@ -18,6 +16,7 @@ mod ex_2015_06_2;
 mod ex_2015_07;
 mod ex_2015_07_2;
 mod solver;
+mod y2015;
 mod y2024;
 
 macro_rules! default_file {
@@ -94,6 +93,7 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
+        15 -> 01-01
         24 -> 01-25
     );
     // let args: Vec<_> = env::args().collect();
