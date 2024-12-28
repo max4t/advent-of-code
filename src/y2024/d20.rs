@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, HashSet}, io::{BufRead, Lines, Stdin}, iter};
+use std::{collections::{HashMap, HashSet}, io::{BufRead, Lines}, iter};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
@@ -28,15 +28,6 @@ impl<B: BufRead> TryFrom<(usize, Lines<B>)> for Problem {
         let a = HashSet::from_iter(a.into_iter().filter_map(|(x, y, c)| if c != '#' { Some((x, y)) } else { None }));
 
         Ok(Self(a, start_point, end_point, min_improv))
-    }
-}
-
-impl TryFrom<Stdin> for Problem
-{
-    type Error = anyhow::Error;
-
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        value.lines().try_into()
     }
 }
 

@@ -1,17 +1,16 @@
 use core::panic;
-use std::{io::Stdin, iter};
+use std::{io::{BufRead, Lines}, iter};
 use crate::solver;
 use anyhow::Result;
 use itertools::Itertools;
 
 pub struct Problem(Vec<String>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        Ok(Self(value.lines().collect::<Result<Vec<_>, _>>()?))
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        Ok(Self(value.collect::<Result<Vec<_>, _>>()?))
     }
 }
 

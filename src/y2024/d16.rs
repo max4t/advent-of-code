@@ -1,4 +1,4 @@
-use std::{collections::HashSet, io::Stdin, ops::{Add, Sub}};
+use std::{collections::HashSet, io::{BufRead, Lines}, ops::{Add, Sub}};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
@@ -47,12 +47,11 @@ where T: Sub<usize, Output = T> + Add<usize, Output = T>
 
 pub struct Problem(HashSet<(usize, usize)>, (usize, usize), (usize, usize));
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map(|l| {
                 let l = l?;
                 anyhow::Ok(l.chars().collect::<Vec<_>>())

@@ -1,4 +1,4 @@
-use std::{cmp::Ordering, collections::HashSet, io::Stdin};
+use std::{cmp::Ordering, collections::HashSet, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::Result;
 
@@ -9,12 +9,11 @@ fn parse_dependencies(s: &str) -> Result<(u64, u64), anyhow::Error> {
     Ok((op[0].parse::<u64>()?, op[1].parse::<u64>()?))
 }
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map::<Result<_, Self::Error>, _>(|s| Ok(s?)).collect::<Result<Vec<_>, _>>()?;
         let mut a = a.iter();
         let deps = a.by_ref().map_while(|m| if m.is_empty() { None } else { Some(parse_dependencies(m)) }).collect::<Result<Vec<_>, _>>()?;

@@ -1,15 +1,14 @@
-use std::io::Stdin;
+use std::io::{BufRead, Lines};
 use crate::solver;
 use anyhow::Result;
 
 pub struct Problem(Vec<Vec<char>>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map::<Result<_, Self::Error>, _>(|s| Ok(s?.chars().collect::<Vec<_>>())).collect::<Result<Vec<_>, _>>()?;
         Ok(Self(a))
     }

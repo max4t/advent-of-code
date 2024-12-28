@@ -1,15 +1,14 @@
-use std::{collections::HashMap, io::Stdin, iter::zip};
+use std::{collections::HashMap, io::{BufRead, Lines}, iter::zip};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
 pub struct Problem(Vec<u64>, Vec<u64>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let (a, b): (Vec<_>, Vec<_>) = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let (a, b): (Vec<_>, Vec<_>) = value
             .map(|res| {
                 res.map_err(|err| anyhow!(err)).and_then(|m| {
                     let s = m.trim();

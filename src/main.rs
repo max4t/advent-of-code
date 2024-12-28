@@ -1,4 +1,4 @@
-use std::io;
+use std::{io, path::PathBuf};
 
 use clap::{Parser, ValueEnum};
 use solver::Solver;
@@ -28,8 +28,8 @@ struct Cli {
     day: String,
     #[arg(help = "part one or two of the day")]
     part: Part,
-    // #[arg(short, help = "input file")]
-    // file: String
+    #[arg(short, help = "input file", value_parser = clap::value_parser!(PathBuf))]
+    file: String
 }
 
 #[derive(ValueEnum, Clone, Debug)]
@@ -44,32 +44,27 @@ impl Default for Part {
     fn default() -> Self { Part::One }
 }
 
-macro_rules! case_list {
-    ($args:ident $t:literal $s1:literal-$s2:literal) => (
-        seq_macro::seq!(N in $s1..=$s2 {
-            match $args.day.as_str() {
-                #(
-                    stringify!(N) => {
-                        paste::paste! {
-                            let ex: [<y20 $t>]::d~N::Problem = io::stdin().try_into()?;
-                        }
-                        match $args.part {
-                            Part::One => println!("Result: {}", ex.part_one()),
-                            Part::Two => println!("Result: {}", ex.part_two()),
-                        };
-                    },
-                )*
-                _ => panic!("unknown day"),
-            }
-        })
-    );
-}
 macro_rules! cases {
     ($args:ident $($t:literal -> $s1:literal-$s2:literal)*) => (
         match $args.year.as_str() {
             $(
                 stringify!($t) => {
-                    case_list!($args $t $s1-$s2);
+                    seq_macro::seq!(N in $s1..=$s2 {
+                        match $args.day.as_str() {
+                            #(
+                                stringify!(N) => {
+                                    paste::paste! {
+                                        let ex: [<y20 $t>]::d~N::Problem = io::stdin().lines().try_into()?;
+                                    }
+                                    match $args.part {
+                                        Part::One => println!("Result: {}", ex.part_one()),
+                                        Part::Two => println!("Result: {}", ex.part_two()),
+                                    };
+                                },
+                            )*
+                            _ => panic!("unknown day"),
+                        }
+                    })
                 },
             )*
             _ => panic!("unknown year"),
@@ -78,7 +73,7 @@ macro_rules! cases {
 }
   
 fn main() -> anyhow::Result<()> {
-    let args = dbg!(Cli::parse());
+    let args = Cli::parse();
     cases!(args
         24 -> 01-25
     );

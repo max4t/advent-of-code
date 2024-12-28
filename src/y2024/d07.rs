@@ -1,15 +1,14 @@
-use std::{cmp::Ordering, collections::{HashMap, HashSet}, io::Stdin};
+use std::io::{BufRead, Lines};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
 pub struct Problem(Vec<(u64, Vec<u64>)>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map::<Result<_, Self::Error>, _>(|s| {
                 let s = s?;
                 let Some((res, rest)) = s.split_once(':') else {

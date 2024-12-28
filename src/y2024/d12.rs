@@ -1,15 +1,14 @@
-use std::{collections::{HashMap, HashSet}, io::Stdin, usize};
+use std::{collections::{HashMap, HashSet}, io::{BufRead, Lines}, usize};
 use crate::solver;
 use anyhow::Result;
 
 pub struct Problem(Vec<Vec<char>>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map(|l| {
                 let chars = l?.chars().collect::<Vec<_>>();
                 anyhow::Ok(chars)

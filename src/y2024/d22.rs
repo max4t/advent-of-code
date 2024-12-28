@@ -1,16 +1,15 @@
-use std::{collections::HashMap, io::Stdin, iter};
+use std::{collections::HashMap, io::{BufRead, Lines}, iter};
 use crate::solver;
 use anyhow::Result;
 use itertools::Itertools;
 
 pub struct Problem(Vec<i64>, usize);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        Ok(Self(value.lines().map(|l| anyhow::Ok(l?.parse::<i64>()?)).collect::<Result<Vec<_>, _>>()?, 2000))
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        Ok(Self(value.map(|l| anyhow::Ok(l?.parse::<i64>()?)).collect::<Result<Vec<_>, _>>()?, 2000))
     }
 }
 

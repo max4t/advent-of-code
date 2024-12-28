@@ -1,16 +1,15 @@
-use std::{collections::HashSet, io::Stdin, ops::Add};
+use std::{collections::HashSet, io::{BufRead, Lines}, ops::Add};
 use crate::solver;
 use anyhow::{anyhow, Result};
 use std::hash::Hash;
 
 pub struct Problem(Vec<Vec<bool>>, (usize, usize));
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map::<Result<_, Self::Error>, _>(|s| Ok(s?.chars().collect::<Vec<_>>()))
             .collect::<Result<Vec<_>, _>>()?;
         let mut pos = a.iter().enumerate().flat_map(|(x, l)| l.iter().enumerate().map(move |(y, lll)| ((x, y), lll)));

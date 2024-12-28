@@ -1,16 +1,15 @@
-use std::{collections::HashSet, io::Stdin};
+use std::{collections::HashSet, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::{anyhow, Result};
 use pathfinding::directed::astar;
 
 pub struct Problem(Vec<(usize, usize)>, (usize, usize), usize);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map(|l| {
                 let l = l?;
                 let (a, b) = l.split_once(",").ok_or_else(|| anyhow!("missing comma"))?;

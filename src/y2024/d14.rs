@@ -1,15 +1,14 @@
-use std::{collections::HashMap, io::Stdin};
+use std::{collections::HashMap, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::Result;
 
 pub struct Problem(Vec<((i64, i64), (i64, i64))>, (i64, i64));
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines()
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value
             .map(|l| {
                 let l = l?;
                 let (pos, speed) = l.split_once(' ').ok_or_else(|| anyhow::anyhow!("missing space delim"))?;

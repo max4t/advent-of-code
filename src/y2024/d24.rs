@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io::Stdin};
+use std::{collections::HashMap, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::{anyhow, bail, Result};
 
@@ -11,12 +11,11 @@ enum Gate {
 
 pub struct Problem(HashMap<String, bool>, HashMap<String, Gate>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let mut a = value.lines();
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let mut a = value;
         let init= HashMap::from_iter(a.by_ref()
             .take_while(|l| {
                 if let Ok(s) = l {

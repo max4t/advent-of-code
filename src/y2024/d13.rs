@@ -1,18 +1,17 @@
-use std::io::Stdin;
+use std::io::{BufRead, Lines};
 use crate::solver;
 use anyhow::Result;
 
 pub struct Problem(Vec<([(i64, i64); 2], (i64, i64))>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
         let btn_a_scan = regex::Regex::new(r"Button A: X\+(?<x>\d+), Y\+(?<y>\d+)")?;
         let btn_b_scan = regex::Regex::new(r"Button B: X\+(?<x>\d+), Y\+(?<y>\d+)")?;
         let prize_scan = regex::Regex::new(r"Prize: X=(?<x>\d+), Y=(?<y>\d+)")?;
-        let a = value.lines()
+        let a = value
             .collect::<Result<Vec<_>, _>>()?
             .split(|s| s.trim().is_empty())
             .map(|l| {

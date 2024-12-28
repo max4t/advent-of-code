@@ -1,16 +1,15 @@
-use std::{collections::{HashMap, HashSet}, io::Stdin, iter};
+use std::{collections::{HashMap, HashSet}, io::{BufRead, Lines}, iter};
 use crate::solver;
 use anyhow::{anyhow, Result};
 use itertools::Itertools;
 
 pub struct Problem(Vec<(String, String)>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        Ok(Self(value.lines().map(|l| {
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        Ok(Self(value.map(|l| {
             let l = l?;
             let (a, b) = l.split_once("-").ok_or_else(|| anyhow!("missing separator"))?;
             anyhow::Ok((a.to_string(), b.to_string()))

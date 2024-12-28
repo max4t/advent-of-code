@@ -1,4 +1,4 @@
-use std::{collections::{HashSet, VecDeque}, io::Stdin, ops::{Add, Sub}};
+use std::{collections::{HashSet, VecDeque}, io::{BufRead, Lines}, ops::{Add, Sub}};
 use crate::solver;
 use anyhow::Result;
 use std::hash::Hash;
@@ -189,12 +189,11 @@ impl<T: Copy + PartialEq + MapPiece> Graph for (&Vec<Vec<Option<T>>>, Move) {
 
 pub struct Problem(Vec<Vec<Option<Element>>>, Vec<Move>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let mut lines = value.lines();
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let mut lines = value;
         let a = lines.by_ref().take_while(|p| p.as_ref().is_ok_and(|s| !s.is_empty()))
             .map(|l| {
                 let l = l?;

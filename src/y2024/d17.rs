@@ -1,4 +1,4 @@
-use std::io::Stdin;
+use std::io::{BufRead, Lines};
 use crate::solver;
 use anyhow::{anyhow, bail, ensure, Result};
 
@@ -125,12 +125,11 @@ impl TryFrom<(u8, u8)> for Instruction {
 
 pub struct Problem(Machine, Vec<u8>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let mut a = value.lines();
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let mut a = value;
 
         let reg_a = a.next().ok_or_else(|| anyhow!("unable to parse registry A"))??.trim_start_matches("Register A: ").parse::<u64>()?;
         let reg_b = a.next().ok_or_else(|| anyhow!("unable to parse registry B"))??.trim_start_matches("Register B: ").parse::<u64>()?;

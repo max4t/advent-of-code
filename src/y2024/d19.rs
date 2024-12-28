@@ -1,15 +1,14 @@
-use std::{collections::HashMap, io::Stdin};
+use std::{collections::HashMap, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::{anyhow, Result};
 
 pub struct Problem(Vec<String>, Vec<String>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let mut a = value.lines();
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let mut a = value;
         let patterns = a.next().ok_or_else(|| anyhow!("expected available patterns"))??.split(", ").map(|s| s.to_owned()).collect::<Vec<_>>();
         a.next();
         let req = a.collect::<Result<Vec<_>, _>>()?;

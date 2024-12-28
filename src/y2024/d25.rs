@@ -1,4 +1,4 @@
-use std::{array, io::Stdin};
+use std::{array, io::{BufRead, Lines}};
 use crate::solver;
 use anyhow::Result;
 use itertools::Itertools;
@@ -11,12 +11,11 @@ enum Schematic {
 
 pub struct Problem(Vec<Schematic>);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        let a = value.lines().collect::<Result<Vec<_>, _>>()?;
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        let a = value.collect::<Result<Vec<_>, _>>()?;
         Ok(Self(a.split(|s| s.is_empty()).map(|s| {
             if s[0].starts_with('#') {
                 let s = &s[1..];

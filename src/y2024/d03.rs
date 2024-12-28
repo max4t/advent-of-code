@@ -1,15 +1,14 @@
-use std::io::Stdin;
+use std::io::{BufRead, Lines};
 use crate::solver;
 use anyhow::Result;
 
 pub struct Problem(String);
 
-impl TryFrom<Stdin> for Problem
-{
+impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
-    fn try_from(value: Stdin) -> Result<Self, Self::Error> {
-        Ok(Self(value.lines().collect::<Result<Vec<_>, _>>()?.concat()))
+    fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
+        Ok(Self(value.collect::<Result<Vec<_>, _>>()?.concat()))
     }
 }
 
