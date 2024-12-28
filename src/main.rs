@@ -3,8 +3,6 @@ use std::{fs, io::{self, BufRead}};
 use clap::{Parser, ValueEnum};
 use solver::Solver;
 
-mod ex_2015_06;
-mod ex_2015_06_2;
 mod ex_2015_07;
 mod ex_2015_07_2;
 mod solver;
@@ -86,7 +84,7 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
-        15 -> 01-05
+        15 -> 01-06
         24 -> 01-25
     );
 
