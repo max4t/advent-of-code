@@ -1,4 +1,4 @@
-use std::{io, path::PathBuf};
+use std::{fs, io::{self, BufRead}};
 
 use clap::{Parser, ValueEnum};
 use solver::Solver;
@@ -20,16 +20,20 @@ mod ex_2015_07_2;
 mod solver;
 mod y2024;
 
+macro_rules! default_file {
+    ($year:expr, $day:expr) => { format!("examples/inputs/{}/{}", $year, $day) }
+}
+
 #[derive(Parser, Debug)]
 struct Cli {
     #[arg(help = "year of the exercise")]
     year: String,
     #[arg(help = "day of the year")]
     day: String,
-    #[arg(help = "part one or two of the day")]
+    #[arg(help = "part one or two of the day", default_value_t=Part::One)]
     part: Part,
-    #[arg(short, help = "input file", value_parser = clap::value_parser!(PathBuf))]
-    file: String
+    #[arg(short, help = "input file (use - for stdin)", default_value_t=default_file!("{year}", "{day}"))]
+    file: String,
 }
 
 #[derive(ValueEnum, Clone, Debug)]
@@ -40,8 +44,13 @@ enum Part {
     Two,
 }
 
-impl Default for Part {
-    fn default() -> Self { Part::One }
+impl ToString for Part {
+    fn to_string(&self) -> String {
+        match self {
+            Part::One => "one",
+            Part::Two => "two",
+        }.to_string()
+    }
 }
 
 macro_rules! cases {
@@ -54,7 +63,16 @@ macro_rules! cases {
                             #(
                                 stringify!(N) => {
                                     paste::paste! {
-                                        let ex: [<y20 $t>]::d~N::Problem = io::stdin().lines().try_into()?;
+                                        let ex: [<y20 $t>]::d~N::Problem = if $args.file == "-" {
+                                            io::stdin().lines().try_into()?
+                                        } else {
+                                            let input = if $args.file == default_file!("{year}", "{day}") {
+                                                default_file!($args.year, $args.day)
+                                            } else {
+                                                $args.file
+                                            };
+                                            fs::read(input)?.lines().try_into()?
+                                        };
                                     }
                                     match $args.part {
                                         Part::One => println!("Result: {}", ex.part_one()),
@@ -71,9 +89,10 @@ macro_rules! cases {
         }
     );
 }
-  
+
 fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
+
     cases!(args
         24 -> 01-25
     );
