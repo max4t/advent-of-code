@@ -3,8 +3,6 @@ use std::{fs, io::{self, BufRead}};
 use clap::{Parser, ValueEnum};
 use solver::Solver;
 
-mod ex_2015_02;
-mod ex_2015_02_2;
 mod ex_2015_03;
 mod ex_2015_03_2;
 mod ex_2015_04;
@@ -93,90 +91,9 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
-        15 -> 01-01
+        15 -> 01-02
         24 -> 01-25
     );
-    // let args: Vec<_> = env::args().collect();
-    // assert!(args.len() == 2, "requires one argument but had {}", args.len());
-    // let day = args[1].as_str();
-    // match day {
-    //     // case!(04/01),
-    //     "01-1" => {
-    //         let ex: y2024::d01::Problem = io::stdin().try_into()?;
-    //         let res = ex.part_one();
-    //         println!("Result: {}", res);
-    //     },
-    //     "01-2" => {
-    //         let ex: y2024::d01::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_two();
-    //         println!("Result: {}", res);
-    //     },
-    //     "02-1" => {
-    //         let ex: y2024::d02::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_one();
-    //         println!("Result: {}", res);
-    //     },
-    //     "02-2" => {
-    //         let ex: y2024::d02::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_two();
-    //         println!("Result: {}", res);
-    //     },
-    //     "03-1" => {
-    //         let ex: y2024::d03::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_one();
-    //         println!("Result: {}", res);
-    //     },
-    //     "03-2" => {
-    //         let ex: y2024::d03::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_two();
-    //         println!("Result: {}", res);
-    //     },
-    //     "04-1" => {
-    //         let ex: y2024::d04::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_one();
-    //         println!("Result: {}", res);
-    //     },
-    //     "04-2" => {
-    //         let ex: y2024::d04::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_two();
-    //         println!("Result: {}", res);
-    //     },
-    //     "05-1" => {
-    //         let ex: y2024::d05::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_one();
-    //         println!("Result: {}", res);
-    //     },
-    //     "05-2" => {
-    //         let ex: y2024::d05::Problem = io::stdin().try_into().unwrap();
-    //         let res = ex.part_two();
-    //         println!("Result: {}", res);
-    //     },
-    //     "2015-01" => {
-    //         let a = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-    //         let res = ex_2015_01::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
-    //     "2015-01-2" => {
-    //         let a = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
-    //         let res = ex_2015_01_2::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
-    //     "2015-02" => {
-    //         let lines = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>();
-    //         let a = lines.iter().map(|r| r.split('x').map(|f| f.parse::<i64>().unwrap()).collect::<Vec<_>>()).map(|f| (f[0], f[1], f[2])).collect::<Vec<_>>();
-    //         let res = ex_2015_02::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
-    //     "2015-02-2" => {
-    //         let lines = io::stdin().lines()
-    //             .map(|s| s.unwrap()).collect::<Vec<_>>();
-    //         let a = lines.iter().map(|r| r.split('x').map(|f| f.parse::<i64>().unwrap()).collect::<Vec<_>>()).map(|f| (f[0], f[1], f[2])).collect::<Vec<_>>();
-    //         let res = ex_2015_02_2::basic_solve(&a);
-    //         println!("Result: {}", res);
-    //     },
     //     "2015-03" => {
     //         let a = io::stdin().lines()
     //             .map(|s| s.unwrap()).collect::<Vec<_>>().concat();
