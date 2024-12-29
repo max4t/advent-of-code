@@ -33,30 +33,37 @@ impl TryFrom<&str> for Reindeer {
     }
 }
 
-pub struct Problem(HashMap<String, Reindeer>);
+pub struct Problem(HashMap<String, Reindeer>, u64);
 
 impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     type Error = anyhow::Error;
 
     fn try_from(value: Lines<B>) -> Result<Self, Self::Error> {
-        Ok(Self(value.collect::<Result<Vec<_>, _>>()?.into_iter().map(|s| {
+        (value, 2503).try_into()
+    }
+}
+
+impl<B: BufRead> TryFrom<(Lines<B>, u64)> for Problem {
+    type Error = anyhow::Error;
+
+    fn try_from(value: (Lines<B>, u64)) -> Result<Self, Self::Error> {
+        Ok(Self(value.0.collect::<Result<Vec<_>, _>>()?.into_iter().map(|s| {
             let (name, info) = s.split_once(" can fly ").ok_or_else(|| anyhow!("missing fly info"))?;
             anyhow::Ok((name.to_string(), info.try_into()?))
-        }).collect::<Result<HashMap<_, _>, _>>()?))
+        }).collect::<Result<HashMap<_, _>, _>>()?, value.1))
     }
 }
 
 impl solver::Solver for Problem {
     fn part_one(self: &Self) -> impl std::fmt::Display {
-        let time = 2503;
         self.0.values().map(|r| {
-            r.position_at(time)
+            r.position_at(self.1)
         }).max().unwrap()
     }
 
     fn part_two(self: &Self) -> impl std::fmt::Display {
         let mut points = HashMap::<&String, u64>::new();
-        for i in 1..=2503 {
+        for i in 1..=self.1 {
             let names = self.0.iter().max_set_by_key(|r| r.1.position_at(i));
             for (name, _) in names {
                 points.entry(name).and_modify(|e| *e += 1).or_insert(1);
@@ -69,31 +76,22 @@ impl solver::Solver for Problem {
 #[cfg(test)]
 mod tests {
     use solver::Solver;
-    use test_case::test_case;
 
     use super::*;
 
-    // #[test_case("[1,2,3]", "6")]
-    // #[test_case("{\"a\":2,\"b\":4}", "6")]
-    // #[test_case("[[[3]]]", "3")]
-    // #[test_case("{\"a\":{\"b\":4},\"c\":-1}", "3")]
-    // #[test_case("{\"a\":[-1,1]}", "0")]
-    // #[test_case("[-1,{\"a\":1}]", "0")]
-    // #[test_case("[]", "0" ; "obj")]
-    // #[test_case("{}", "0" ; "arr")]
-    // fn part_one(example: &str, result: &str) -> anyhow::Result<()> {
-    //     let pb: Problem = example.as_bytes().lines().try_into()?;
-    //     assert_eq!(result, format!("{}", pb.part_one()));
-    //     Ok(())
-    // }
+    #[test]
+    fn part_one() -> anyhow::Result<()> {
+        let pb: Problem = ("Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.
+Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.".as_bytes().lines(), 1000).try_into()?;
+        assert_eq!("1120", format!("{}", pb.part_one()));
+        Ok(())
+    }
 
-    // #[test_case("[1,2,3]", "6")]
-    // #[test_case("[1,{\"c\":\"red\",\"b\":2},3]", "4")]
-    // #[test_case("{\"d\":\"red\",\"e\":[1,2,3,4],\"f\":5}", "0")]
-    // #[test_case("[1,\"red\",5]", "6")]
-    // fn part_two(example: &str, result: &str) -> anyhow::Result<()> {
-    //     let pb: Problem = example.as_bytes().lines().try_into()?;
-    //     assert_eq!(result, format!("{}", pb.part_two()));
-    //     Ok(())
-    // }
+    #[test]
+    fn part_two() -> anyhow::Result<()> {
+        let pb: Problem = ("Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.
+Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.".as_bytes().lines(), 1000).try_into()?;
+        assert_eq!("689", format!("{}", pb.part_two()));
+        Ok(())
+    }
 }
