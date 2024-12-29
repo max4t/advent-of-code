@@ -72,9 +72,9 @@ impl<T> Grid<T> {
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items(Pt(0, 0)..self.size)
     }
-    pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
-        self.items_mut(Pt(0, 0)..self.size)
-    }
+    // pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
+    //     self.items_mut(Pt(0, 0)..self.size)
+    // }
     pub fn items(&self, pts: impl std::ops::RangeBounds<Pt<usize>>) -> impl Iterator<Item = &T> {
         let rows = ((pts.start_bound().cloned().map(|b| b.1)), (pts.end_bound().cloned().map(|b| b.1)));
         let cols = ((pts.start_bound().cloned().map(|b| b.0)), (pts.end_bound().cloned().map(|b| b.0)));
