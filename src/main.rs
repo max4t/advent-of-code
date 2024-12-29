@@ -82,7 +82,7 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
-        15 -> 01-08
+        15 -> 01-10
         24 -> 01-25
     );
 
