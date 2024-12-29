@@ -65,13 +65,4 @@ mod tests {
         assert_eq!(result, format!("{}", pb.part_one()));
         Ok(())
     }
-    
-    #[test]
-    fn part_two() -> anyhow::Result<()> {
-        let pb: Problem = "London to Dublin = 464
-London to Belfast = 518
-Dublin to Belfast = 141".as_bytes().lines().try_into()?;
-        assert_eq!("982", format!("{}", pb.part_two()));
-        Ok(())
-    }
 }
