@@ -1,8 +1,8 @@
-use std::ops::Add;
+use std::ops::{Add, Bound, Index, IndexMut, Range};
 use std::hash::Hash;
 use anyhow::bail;
 
-#[derive(Hash, PartialEq, Eq, Clone, Copy)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy, Debug)]
 pub struct Pt<T>(pub T, pub T);
 
 impl<T> From<(T, T)> for Pt<T> {
@@ -54,37 +54,133 @@ macro_rules! add_impl {
 
 add_impl! { usize u8 u16 u32 u64 u128 isize i8 i16 i32 i64 i128 }
 
+#[derive(Clone)]
 pub struct Grid<T> {
     size: Pt<usize>,
     map: Vec<Vec<T>>,
 }
 
+impl<T> Grid<T> {
+    pub fn size(&self) -> (usize, usize) {
+        (self.size.0, self.size.1)
+    }
+}
+
 impl<T: Copy> Grid<T> {
     pub fn new<const W: usize, const H: usize>(init: T) -> Self {
+        Self::new_dyn(W, H, init)
+    }
+    pub fn new_dyn(w: usize, h: usize, init: T) -> Self {
         Self {
-            size: Pt(W, H),
-            map: vec![vec![init; W]; H],
+            size: Pt(w, h),
+            map: vec![vec![init; w]; h],
         }
     }
 }
 
+impl<T, II: IntoIterator<Item = T> + Clone> FromIterator<II> for Grid<T> {
+    fn from_iter<I: IntoIterator<Item = II>>(iter: I) -> Self {
+        let mut iter = iter.into_iter().peekable();
+        let peek: Option<&II> = iter.peek();
+        if let Some(peek) = peek {
+            let l = peek.clone().into_iter().count();
+            let res = iter.map(|r: II| r.into_iter().collect::<Vec<_>>()).collect::<Vec<_>>();
+            Self {
+                size: Pt(l, res.len()),
+                map: res,
+            }
+        } else {
+            Self {
+                size: Pt(0, 0),
+                map: Vec::new(),
+            }
+        }
+    }
+}
+
+// inspired by std::slice::into_range
+fn into_range(
+    len: usize,
+    (start, end): (Bound<usize>, Bound<usize>),
+) -> Range<usize> {
+    let start = match start {
+        Bound::Included(start) => start,
+        Bound::Excluded(start) => start + 1,
+        Bound::Unbounded => 0,
+    }.max(0);
+
+    let end = match end {
+        Bound::Included(end) => end + 1,
+        Bound::Excluded(end) => end,
+        Bound::Unbounded => len,
+    }.min(len);
+
+    // Don't bother with checking `start < end` and `end <= len`
+    // since these checks are handled by `Range` impls
+
+    start..end
+}
+
 impl<T> Grid<T> {
+    fn saturating_move(&self, Pt(x, y): Pt<usize>, dir: Direction) -> Pt<usize> {
+        match dir {
+            Direction::N if y == 0 => Pt(x, y),
+            Direction::E if x == self.size.0 - 1 => Pt(x, y),
+            Direction::S if y == self.size.1 - 1 => Pt(x, y),
+            Direction::W if x == 0 => Pt(x, y),
+            _ => Pt(x, y) + dir,
+        }
+    }
+
+    pub fn neigbours(&self, pos: Pt<usize>) -> impl Iterator<Item = &T> {
+        self.neighbour_positions(pos).map(|Pt(x, y)| &self.map[y][x])
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.items(Pt(0, 0)..self.size)
     }
     // pub fn iter_mut(&mut self) -> impl Iterator<Item = &mut T> {
     //     self.items_mut(Pt(0, 0)..self.size)
     // }
-    pub fn items(&self, pts: impl std::ops::RangeBounds<Pt<usize>>) -> impl Iterator<Item = &T> {
+    pub fn positions(&self, pts: impl std::ops::RangeBounds<Pt<usize>>) -> impl Iterator<Item = Pt<usize>> {
         let rows = ((pts.start_bound().cloned().map(|b| b.1)), (pts.end_bound().cloned().map(|b| b.1)));
         let cols = ((pts.start_bound().cloned().map(|b| b.0)), (pts.end_bound().cloned().map(|b| b.0)));
-        self.map[rows].iter()
-            .flat_map(move |row| row[cols].iter())
+        let rows = into_range(self.size.1, rows);
+        let cols = into_range(self.size.0, cols);
+        rows.flat_map(move |y| cols.clone().map(move |x| Pt(x, y)))
+    }
+    pub fn all_positions(&self) -> impl Iterator<Item = Pt<usize>> {
+        self.positions(Pt(0, 0)..self.size)
+    }
+    pub fn neighbour_positions(&self, pos: Pt<usize>) -> impl Iterator<Item = Pt<usize>> {
+        let top = self.saturating_move(pos, Direction::N);
+        let bottom = self.saturating_move(pos, Direction::S);
+        self.positions(self.saturating_move(top, Direction::W)..=self.saturating_move(bottom, Direction::E))
+            .filter(move |&pt| pt != pos)
+    }
+    pub fn items(&self, pts: impl std::ops::RangeBounds<Pt<usize>>) -> impl Iterator<Item = &T> {
+        self.positions(pts).map(|Pt(x, y)| &self.map[y][x])
     }
     pub fn items_mut(&mut self, pts: impl std::ops::RangeBounds<Pt<usize>>) -> impl Iterator<Item = &mut T> {
+        // self.positions(pts).map(|Pt(x, y)| self.map.get_mut(y).unwrap().get_mut(x).unwrap())
+
         let rows = ((pts.start_bound().cloned().map(|b| b.1)), (pts.end_bound().cloned().map(|b| b.1)));
         let cols = ((pts.start_bound().cloned().map(|b| b.0)), (pts.end_bound().cloned().map(|b| b.0)));
         self.map[rows].iter_mut()
             .flat_map(move |row| row[cols].iter_mut())
+    }
+}
+
+impl<T> Index<Pt<usize>> for Grid<T> {
+    type Output = T;
+
+    fn index(&self, Pt(x, y): Pt<usize>) -> &Self::Output {
+        &self.map[y][x]
+    }
+}
+
+impl<T> IndexMut<Pt<usize>> for Grid<T> {
+    fn index_mut(&mut self, Pt(x, y): Pt<usize>) -> &mut Self::Output {
+        &mut self.map[y][x]
     }
 }
