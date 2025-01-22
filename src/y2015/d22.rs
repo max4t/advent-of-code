@@ -20,12 +20,18 @@ impl solver::Solver for Problem {
         let game = Game {
             player: Wizard::new(50, 500),
             enemy: self.0.clone(),
+            hard_mode: false,
         };
         game.process()
     }
 
     fn part_two(self: &Self) -> impl std::fmt::Display {
-        0
+        let game = Game {
+            player: Wizard::new(50, 500),
+            enemy: self.0.clone(),
+            hard_mode: true,
+        };
+        game.process()
     }
 }
 

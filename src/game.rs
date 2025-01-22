@@ -311,6 +311,7 @@ pub struct Action<C: Character, E: Character> {
 pub struct Game<P: Character> {
     pub player: P,
     pub enemy: Warrior,
+    pub hard_mode: bool,
 }
 
 impl<P: Character> Game<P>
@@ -318,6 +319,9 @@ where
     P: CharacterActions<Warrior>
 {
     fn play_turn(&mut self, action: Action<P, Warrior>) -> Result<&Self, CharacterError> {
+        if self.hard_mode {
+            self.player.gets_attacked(Damage::Magic(1))?;
+        }
         self.run_effects()?;
         match action.run {
             TargetSpell::OntoSelf(r) => r(&mut self.player),
