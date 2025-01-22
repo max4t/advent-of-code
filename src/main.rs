@@ -5,6 +5,7 @@ use solver::Solver;
 
 mod solver;
 mod map;
+mod game;
 mod y2015;
 mod y2024;
 
@@ -82,7 +83,7 @@ fn main() -> anyhow::Result<()> {
     let args = Cli::parse();
 
     cases!(args
-        15 -> 01-21
+        15 -> 01-22
         24 -> 01-25
     );
 
