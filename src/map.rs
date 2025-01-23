@@ -5,6 +5,19 @@ use anyhow::bail;
 #[derive(Hash, PartialEq, Eq, Clone, Copy, Debug)]
 pub struct Pt<T>(pub T, pub T);
 
+impl Pt<usize> {
+    pub fn saturating_add(self, dir: Direction, within: Self) -> Self {
+        let Pt(x, y) = self;
+        match dir {
+            Direction::N if y == 0 => self,
+            Direction::E if x == within.0 - 1 => self,
+            Direction::S if y == within.1 - 1 => self,
+            Direction::W if x == 0 => self,
+            _ => self + dir,
+        }
+    }
+}
+
 impl<T> From<(T, T)> for Pt<T> {
     fn from((a, b): (T, T)) -> Self {
         Pt(a, b)
@@ -160,14 +173,8 @@ fn into_range(
 }
 
 impl<T> Grid<T> {
-    fn saturating_move(&self, Pt(x, y): Pt<usize>, dir: Direction) -> Pt<usize> {
-        match dir {
-            Direction::N if y == 0 => Pt(x, y),
-            Direction::E if x == self.size.0 - 1 => Pt(x, y),
-            Direction::S if y == self.size.1 - 1 => Pt(x, y),
-            Direction::W if x == 0 => Pt(x, y),
-            _ => Pt(x, y) + dir,
-        }
+    fn saturating_move(&self, pt: Pt<usize>, dir: Direction) -> Pt<usize> {
+        pt.saturating_add(dir, self.size)
     }
 
     pub fn neigbours(&self, pos: Pt<usize>) -> impl Iterator<Item = &T> {
