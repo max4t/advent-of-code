@@ -11,12 +11,43 @@ impl<T> From<(T, T)> for Pt<T> {
     }
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
+pub enum Side {
+    Left,
+    Right,
+}
+
+#[derive(Clone, Copy, Debug)]
 pub enum Direction {
     N,
     E,
     S,
     W,
+}
+
+impl Add<Side> for Direction {
+    type Output = Direction;
+
+    fn add(self, rhs: Side) -> Self::Output {
+        match self {
+            Direction::N => match rhs {
+                Side::Left => Direction::W,
+                Side::Right => Direction::E,
+            },
+            Direction::E => match rhs {
+                Side::Left => Direction::N,
+                Side::Right => Direction::S,
+            },
+            Direction::S => match rhs {
+                Side::Left => Direction::E,
+                Side::Right => Direction::W,
+            },
+            Direction::W => match rhs {
+                Side::Left => Direction::S,
+                Side::Right => Direction::N,
+            },
+        }
+    }
 }
 
 impl TryFrom<char> for Direction {
@@ -34,7 +65,7 @@ impl TryFrom<char> for Direction {
 }
 
 macro_rules! add_impl {
-    ($($t:ty)*) => ($(
+    ($($t:ty, unsigned = $ut:ty)*) => ($(
         impl Add<Direction> for Pt<$t> {
             type Output = Self;
 
@@ -49,10 +80,17 @@ macro_rules! add_impl {
                 }
             }
         }
+
+        impl Pt<$t> {
+            #[allow(dead_code)]
+            pub fn manhattan_distance(self, other: Self) -> $ut {
+                self.0.abs_diff(other.0) + self.1.abs_diff(other.1)
+            }
+        }
     )*)
 }
 
-add_impl! { usize u8 u16 u32 u64 u128 isize i8 i16 i32 i64 i128 }
+add_impl! { usize, unsigned = usize u8, unsigned = u8 u16, unsigned = u16 u32, unsigned = u32 u64, unsigned = u64 u128, unsigned = u128 isize, unsigned = usize i8, unsigned = u8 i16, unsigned = u16 i32, unsigned = u32 i64, unsigned = u64 i128, unsigned = u128 }
 
 #[derive(Clone)]
 pub struct Grid<T> {
