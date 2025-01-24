@@ -9,6 +9,7 @@ mod game;
 mod y2015;
 mod y2016;
 mod y2017;
+mod y2018;
 mod y2024;
 
 macro_rules! default_file {
@@ -88,6 +89,7 @@ fn main() -> anyhow::Result<()> {
         15 -> 01-25
         16 -> 01-04
         17 -> 01-02
+        18 -> 01-01
         24 -> 01-25
     );
 
