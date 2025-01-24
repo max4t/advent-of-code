@@ -13,30 +13,30 @@ impl<B: BufRead> TryFrom<Lines<B>> for Problem {
     }
 }
 
-pub fn approximated_sqrt(n: usize) -> usize {
-    let mut num_bits = (std::mem::size_of::<usize>() << 3) - 1;
-    while ((n >> num_bits) & 1) == 0 {
-        num_bits -= 1;
-    }
-    
-    1 << ((num_bits >> 1) + 1)
+// sqrt from https://en.wikipedia.org/wiki/Integer_square_root#Linear_search_using_addition
+fn seq_sqrt() -> impl Iterator<Item = (usize, usize)> {
+    (1..).scan((0, 1, 3), |(l, a, d), n| {
+        while *a <= n {
+            *a += *d;
+            *d += 2;
+            *l += 1;
+        }
+        Some((n, *l))
+    })
 }
 
 impl solver::Solver for Problem {
     fn part_one(self: &Self) -> impl std::fmt::Display {
-        (1..).find(|i| {
-            let c = (1..=(approximated_sqrt(*i))).filter(|j| i%j == 0).flat_map(|j| [j, i/j]).sum::<usize>()*10;
-            c > self.0
+        seq_sqrt().find_map(|(i, sqrt)| {
+            let c = (1..=sqrt).filter(|j| i%j == 0).flat_map(|j| [j, i/j]).sum::<usize>()*10;
+            (c > self.0).then_some(i)
         }).unwrap()
     }
 
     fn part_two(self: &Self) -> impl std::fmt::Display {
-        (1..).find(|&house| {
-            let c = (1..=(approximated_sqrt(house))).filter(|&elf| house%elf == 0).flat_map(|elf| [elf, house/elf]).filter(|&elf| elf >= house/50).sum::<usize>()*11;
-            if house % 100_000 == 0 {
-                dbg!((house, c));
-            }
-            c > self.0
+        seq_sqrt().find_map(|(house, sqrt_house)| {
+            let c = (1..=sqrt_house).filter(|&elf| house%elf == 0).flat_map(|elf| [elf, house/elf]).filter(|&elf| elf >= house/50).sum::<usize>()*11;
+            (c > self.0).then_some(house)
         }).unwrap()
     }
 }
