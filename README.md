@@ -10,12 +10,12 @@
 - [ ] improve implementation by reducing allocs? (prototypeing for now)
 - [ ] clean up year 2024
 - [ ] finish previous years
-    [X] 2015
-    [ ] 2016
-    [ ] 2017
-    [ ] 2018
-    [ ] 2019
-    [ ] 2020
-    [ ] 2021
-    [ ] 2022
-    [ ] 2023
+    - [X] 2015
+    - [ ] 2016
+    - [ ] 2017
+    - [ ] 2018
+    - [ ] 2019
+    - [ ] 2020
+    - [ ] 2021
+    - [ ] 2022
+    - [ ] 2023
