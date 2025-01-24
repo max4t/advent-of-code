@@ -317,19 +317,29 @@ mod tests {
     }
 
     #[test]
-    fn part_two() {
-        assert_eq!("2028", format!("{}", Problem(vec![
-            vec![Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall)],
-            vec![Some(Element::Wall), None, None, Some(Element::Box), None, Some(Element::Box), None, Some(Element::Wall)],
-            vec![Some(Element::Wall), Some(Element::Wall), Some(Element::Robot), None, Some(Element::Box), None, None, Some(Element::Wall)],
-            vec![Some(Element::Wall), None, None, None, Some(Element::Box), None, None, Some(Element::Wall)],
-            vec![Some(Element::Wall), None, Some(Element::Wall), None, Some(Element::Box), None, None, Some(Element::Wall)],
-            vec![Some(Element::Wall), None, None, None, Some(Element::Box), None, None, Some(Element::Wall)],
-            vec![Some(Element::Wall), None, None, None, None, None, None, Some(Element::Wall)],
-            vec![Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall), Some(Element::Wall)],
-        ], vec![
-            Move::Left, Move::Up, Move::Up, Move::Right, Move::Right, Move::Right, Move::Down, Move::Down, Move::Left, Move::Down, Move::Right,
-            Move::Right, Move::Down, Move::Left, Move::Left,
-        ]).part_two()));
+    fn part_two() -> Result<()> {
+        let ex: Problem = "##########
+#..O..O.O#
+#......O.#
+#.OO..O.O#
+#..O@..O.#
+#O#..O...#
+#O..O..O.#
+#.OO.O.OO#
+#....O...#
+##########
+
+<vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
+vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
+><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
+<<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
+^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
+^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
+>^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
+<><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
+^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
+v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^".as_bytes().lines().try_into()?;
+        assert_eq!("9021", format!("{}", ex.part_two()));
+        Ok(())
     }
 }

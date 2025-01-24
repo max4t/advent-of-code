@@ -62,9 +62,4 @@ mod tests {
             Schematic::Key([3,0,2,0,1]),
         ]).part_one()));
     }
-
-    #[test]
-    fn part_two() {
-        assert_eq!("co,de,ka,ta", format!("{}", Problem(vec![]).part_two()));
-    }
 }
