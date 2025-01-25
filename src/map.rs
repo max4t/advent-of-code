@@ -93,6 +93,16 @@ macro_rules! add_impl {
                 }
             }
         }
+        impl Add<Self> for Pt<$t> {
+            type Output = Self;
+
+            #[inline]
+            fn add(self, rhs: Self) -> Self::Output {
+                let Self(x, y) = self;
+                let Self(x1, y1) = rhs;
+                Self(x+x1, y+y1)
+            }
+        }
 
         impl Pt<$t> {
             #[allow(dead_code)]
@@ -105,7 +115,7 @@ macro_rules! add_impl {
 
 add_impl! { usize, unsigned = usize u8, unsigned = u8 u16, unsigned = u16 u32, unsigned = u32 u64, unsigned = u64 u128, unsigned = u128 isize, unsigned = usize i8, unsigned = u8 i16, unsigned = u16 i32, unsigned = u32 i64, unsigned = u64 i128, unsigned = u128 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Grid<T> {
     size: Pt<usize>,
     map: Vec<Vec<T>>,
